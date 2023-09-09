@@ -13,10 +13,7 @@ Config.Fuel = 'cdn-fuel' -- Set to the name of your fuel script
 Config.UseArmory = true
 Config.UseBoatHeliLocations = true
 Config.UseBossMenus = true
-
--- NV Indexes --
-Config.Nightvision = { 116, 117 }
-Config.ThermalKey = 172 -- Up Arrow
+Config.UseEvidence = true
 
 -- Fines Config --
 Config.FineCommand = {
@@ -33,8 +30,14 @@ Config.Webhooks = {
 
 -- Boss Menu Configs --
 Config.BossMenus = {
-    { label = 'PD Management', job = 'police', rank = 0, cert = 'none', coords = vector3(461.42, -986.25, 30.73), radius = 0.4 }
+    { label = 'PD Management', job = 'police', rank = 0, cert = 'none', coords = vec3(461.42, -986.25, 30.73), radius = 0.4 }
 }
+
+-- Evidence Rooms Config --
+Config.EvidenceRooms = { -- Locker locations (Spawn Peds)
+    { label = 'Mission Row Evidence Room', model = 'a_f_y_femaleagent',  coords = vec4(465.27, -990.02, 24.91, 91.33), scenario = 'WORLD_HUMAN_CLIPBOARD' },
+}
+Config.EvidenceLockerSize = { slots = 50, size = 100000 } -- Size of lockers
 
 -- Grant / Revoke Certifications --
 Config.Certifications = {
@@ -59,12 +62,12 @@ Config.BoatsAndHelis = {
     {
         label = 'Mission Row Helipad',
         job = 'police',
-        spawn = vector4(449.9, -981.46, 44.06, 360.0),
+        spawn = vec4(449.9, -981.46, 44.06, 360.0),
         class = 15, -- Vehicle Class Allowed
         ped = {
             model = 's_m_y_cop_01',
             scenario = 'WORLD_HUMAN_CLIPBOARD',
-            coords = vector4(463.67, -982.35, 43.69, 92.01),
+            coords = vec4(463.67, -982.35, 43.69, 92.01),
             icon = 'fas fa-helicopter'
         },
         returnLocations = {
@@ -85,12 +88,12 @@ Config.BoatsAndHelis = {
     {
         label = 'PD Boats Dock',
         job = 'police',
-        spawn = vector4(-785.92, -1438.53, 0.12, 138.35),
+        spawn = vec4(-785.92, -1438.53, 0.12, 138.35),
         class = 14, -- Vehicle Class Allowed
         ped = {
             model = 's_m_y_cop_01',
             scenario = 'WORLD_HUMAN_CLIPBOARD',
-            coords = vector4(-782.71, -1441.87, 1.6, 283.12),
+            coords = vec4(-782.71, -1441.87, 1.6, 283.12),
             icon = 'fas fa-anchor'
         },
         returnLocations = {
@@ -110,29 +113,6 @@ Config.BoatsAndHelis = {
         },
     },
 }
-
--- Slim Jim Configuration --
-Config.SlimJim = {
-    difficulty = { -- Choose random difficulty
-        {'easy', 'easy'}
-    },
-    keys = { 'e' }
-}
-
--- Slim Jim Success Function --
-function Config.SlimJimSuccess(success, vehicle, vehCoords)
-    local chance = math.random(1, 100)
-    local pdChance = 50
-    if success then
-        QBCore.Functions.Notify('You unlocked the door!', 'success')
-        pdChance = math.random(10, 20)
-    else
-        QBCore.Functions.Notify('You failed to unlock the door!', 'error')
-        pdChance = math.random(50, 80)
-    end
-
-    if chance <= pdChance then exports['ps-dispatch']:CarJacking(vehicle) end
-end
 
 --------------------------------------------
 

@@ -239,4 +239,33 @@ function xTc.CleanupPDArmory()
     end
 end
 
+-- Create Evidence Peds --
+function xTc.EvidenceRoomPed()
+    for x = 1, #Config.EvidenceRooms do
+        local Evidence = Config.EvidenceRooms[x]
+        EvidencePeds[x] = xTc.Ped(Evidence.model, Evidence.coords, Evidence.scenario)
+        exports.ox_target:addLocalEntity(EvidencePeds[x], {
+            {
+                type = "client",
+                icon = 'fas fa-inbox',
+                label = Evidence.label,
+                onSelect = function()
+                    TriggerEvent('xt-pdextras:client:EvidenceRoom', x)
+                end,
+                job = 'police',
+                distance = 2.5
+            },
+        })
+    end
+end
+
+-- Remove Evidence Peds --
+function xTc.RemoveEvidenceRoomPed()
+    for x = 1, #EvidencePeds do
+        if DoesEntityExist(EvidencePeds[x]) then
+            DeletePed(EvidencePeds[x])
+        end
+    end
+end
+
 return xTc
