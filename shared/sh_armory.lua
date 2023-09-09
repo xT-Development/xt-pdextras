@@ -1,3 +1,5 @@
+Config = Config or {}
+
 -- Armory Config --
 -- locations
 -- Quick Restock Config
