@@ -79,9 +79,11 @@ function xTc.CreatePDBossMenus()
                     end,
                     canInteract = function()
                         local playerCerts, playerRank = lib.callback.await('xt-pdextras:server:CertsAndRank', false)
-                        if (Location.rank == 0 or playerRank >= Location.rank) and (Location.cert == 'none' or playerCerts[Location.cert]) then return true else return false end
+                        local callback = false
+                        if (Location.rank == 0 or playerRank >= Location.rank) and (Location.cert == 'none' or playerCerts[Location.cert]) then callback = true end
+                        return callback
                     end,
-                    job = Location.job,
+                    groups = Location.job,
                     distance = 2.5
                 }
             }

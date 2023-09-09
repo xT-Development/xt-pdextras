@@ -53,4 +53,18 @@ function xTs.Log(logName, color, title, text)
     TriggerEvent("qb-log:server:CreateLog", logName, title, color, text, false, 'xt-pdextras')
 end
 
+function xTs.ClosestEvidenceLocker(source, distance)
+    local pCoords = GetEntityCoords(GetPlayerPed(source))
+    local callback = nil
+    for x = 1, #Config.EvidenceRooms do
+        local evidenceCoords = vec3(Config.EvidenceRooms[x].coords.x, Config.EvidenceRooms[x].coords.y, Config.EvidenceRooms[x].coords.z)
+        local dist = #(evidenceCoords - pCoords)
+        if dist <= distance then
+            callback = x
+            break
+        end
+    end
+    return callback
+end
+
 return xTs
