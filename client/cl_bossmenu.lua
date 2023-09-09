@@ -15,6 +15,13 @@ RegisterNetEvent('xt-pdextras:client:BossMenu', function(menuID)
             icon = 'fas fa-people-group'
         },
         {
+            title = 'View Officers by Rank',
+            description = 'View department ranks and officers with each rank',
+            event = 'xt-pdextras:client:RankMenu',
+            args = menuID,
+            icon = 'fas fa-people-group'
+        },
+        {
             title = 'Hire Officer',
             description = 'Hire a new officer',
             event = 'xt-pdextras:client:HireOfficer',
@@ -87,6 +94,63 @@ RegisterNetEvent('xt-pdextras:client:ViewOfficersMenu', function(menuID)
     lib.showContext('pd_officers_menu')
 end)
 
+-- View Officers by Rank --
+RegisterNetEvent('xt-pdextras:client:RankMenu', function(menuID)
+    local job = Config.BossMenus[menuID].job
+    local RanksMenu = {}
+    local ranks = {}
+
+    for x, t in pairs(QBCore.Shared.Jobs[job].grades) do
+        table.insert(ranks, tonumber(x))
+    end
+
+    table.sort(ranks)
+    for x = 1, #ranks do
+        local Grade = QBCore.Shared.Jobs[job].grades[tostring(ranks[x])]
+        RanksMenu[#RanksMenu+1] = {
+            title = ranks[x]..' | '..Grade.name,
+            event = 'xt-pdextras:client:ViewOfficersRankMenu',
+            args = { rank = ranks[x], menu = menuID }
+        }
+    end
+
+    lib.registerContext({
+        id = 'ranks_menu',
+        title = 'View Officers by Rank',
+        menu = 'pd_boss_menu',
+        options = RanksMenu
+    })
+    lib.showContext('ranks_menu')
+end)
+
+-- View Officers by Rank Menu --
+RegisterNetEvent('xt-pdextras:client:ViewOfficersRankMenu', function(data)
+    local Officers = lib.callback.await('xt-pdextras:server:GetOfficers', false, data.menu)
+    local job = Config.BossMenus[data.menu].job
+    local OfficersByRankMenu = {}
+
+    for x, t in pairs(Officers) do
+        if t.grade == data.rank then
+            OfficersByRankMenu[#OfficersByRankMenu+1] = {
+                title = t.name,
+                description = QBCore.Shared.Jobs[job].grades[tostring(t.grade)].name,
+                event = 'xt-pdextras:client:OfficerInfoMenu',
+                args = { officer = t, job = job },
+                icon = 'fas fa-user'
+            }
+        end
+    end
+
+    lib.registerContext({
+        id = 'pd_officers_menu',
+        title = QBCore.Shared.Jobs[job].grades[tostring(data.rank)].name..' Officers',
+        menu = 'ranks_menu',
+        hasSearch = true,
+        options = OfficersByRankMenu
+    })
+    lib.showContext('pd_officers_menu')
+end)
+
 -- View Officer Specifically --
 RegisterNetEvent('xt-pdextras:client:OfficerInfoMenu', function(data)
     local OfficerInfoMenu = {
@@ -125,10 +189,16 @@ RegisterNetEvent('xt-pdextras:client:GetPlayerCertMenu', function(data)
     local OfficerCertsMenu = {}
     local hasCert = ''
 
-    for x, t in pairs(playerCerts) do
-        if t then hasCert = '✅' else hasCert = '❌' end
+    if playerCerts then
+        for x, t in pairs(playerCerts) do
+            if t then hasCert = '✅' else hasCert = '❌' end
+            OfficerCertsMenu[#OfficerCertsMenu+1] = {
+                title = hasCert..' | '..Config.Certifications.certs[x],
+            }
+        end
+    else
         OfficerCertsMenu[#OfficerCertsMenu+1] = {
-            title = hasCert..' | '..Config.Certifications.certs[x],
+            title = '❌ | NONE FOUND',
         }
     end
 
@@ -143,7 +213,7 @@ end)
 
 -- Change Officer Rank Menu --
 RegisterNetEvent('xt-pdextras:client:ChangeRank', function(data)
-    local RankMenu = {}
+    local OfficerRanksMenu = {}
     local ranks = {}
 
     for x, t in pairs(QBCore.Shared.Jobs[data.job].grades) do
@@ -153,20 +223,20 @@ RegisterNetEvent('xt-pdextras:client:ChangeRank', function(data)
     table.sort(ranks)
     for x = 1, #ranks do
         local Grade = QBCore.Shared.Jobs[data.job].grades[tostring(ranks[x])]
-        RankMenu[#RankMenu+1] = {
+        OfficerRanksMenu[#OfficerRanksMenu+1] = {
             title = ranks[x]..' | '..Grade.name,
             serverEvent = 'xt-pdextras:server:ChangeRank',
-            args = { job = data.job, cid = data.officer.cid, grade = ranks[x] }
+            args = { job = data.job, cid = data.officer.cid, grade = ranks[x], name = data.officer.name }
         }
     end
 
     lib.registerContext({
-        id = 'rank_menu',
+        id = 'officer_rank_menu',
         title = data.officer.name..' | '..QBCore.Shared.Jobs[data.job].grades[tostring(data.officer.grade)].name,
         menu = 'officers_info_menu',
-        options = RankMenu
+        options = OfficerRanksMenu
     })
-    lib.showContext('rank_menu')
+    lib.showContext('officer_rank_menu')
 end)
 
 -- Grant / Revoke Certs --
