@@ -5,7 +5,7 @@ Config.Debug = true -- Set to true to enable debug mode
 Config.DebugPoly = false
 
 -- General Configs --
-Config.RenewedPhone = true -- Enable if using Renewed-Phone
+Config.RenewedPhone = true -- Enable if using Renewed-Phone / Uses qb-management if false
 Config.PoliceJobs = { 'police' } -- Set to the name of your police job(s)
 Config.Fuel = 'cdn-fuel' -- Set to the name of your fuel script
 
@@ -30,7 +30,7 @@ Config.Webhooks = {
 
 -- Boss Menu Configs --
 Config.BossMenus = {
-    { label = 'PD Management', job = 'police', rank = 0, cert = 'none', coords = vec3(461.42, -986.25, 30.73), radius = 0.4 }
+    { label = 'PD Management', job = 'police', rank = 4, cert = 'none', coords = vec3(461.42, -986.25, 30.73), radius = 0.4 }
 }
 
 -- Evidence Rooms Config --
@@ -38,6 +38,9 @@ Config.EvidenceRooms = { -- Locker locations (Spawn Peds)
     { label = 'Mission Row Evidence Room', model = 'a_f_y_femaleagent',  coords = vec4(465.27, -990.02, 24.91, 91.33), scenario = 'WORLD_HUMAN_CLIPBOARD' },
 }
 Config.EvidenceLockerSize = { slots = 50, size = 100000 } -- Size of lockers
+Config.EvidenceCommand = 'evidence' -- Ex: /evidence 1   -- Opens Evidence 1
+Config.EvidenceCommandDistance = 10 -- Evidence command is usable if player is within this distance from any accessible evidence locker
+Config.WipeTrashInterval = 1 -- Minutes between clearing the trash cans
 
 -- Grant / Revoke Certifications --
 Config.Certifications = {
