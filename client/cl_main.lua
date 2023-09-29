@@ -11,6 +11,7 @@ HeliAndBoatPeds = {}
 PDBossMenus = {}
 ArmoryZone = {}
 EvidencePeds = {}
+GaragePeds = {}
 
 -- Fine Player Menu --
 RegisterNetEvent('xt-pdextras:client:FinePlayerMenu', function()
@@ -37,6 +38,7 @@ local function playerLoaded()
     if Config.UseArmory then xTc.CreatePDArmory() end
     if Config.UseBossMenus then xTc.CreatePDBossMenus() end
     if Config.UseEvidence then xTc.EvidenceRoomPed() end
+    if Config.UseGarages then xTc.GaragePeds() end
     if Config.UseBoatHeliLocations then
         xTc.HeliBoatPeds()
         xTc.ReturnVehiclePoints()
@@ -50,6 +52,7 @@ local function playerUnload()
     if Config.UseArmory then xTc.CleanupPDArmory() end
     if Config.UseBossMenus then xTc.CleanupPDBossMenus() end
     if Config.UseEvidence then xTc.RemoveEvidenceRoomPed() end
+    if Config.UseGarages then xTc.RemoveGaragePeds() end
     if Config.UseBoatHeliLocations then
         xTc.RemoveVehicleReturnPoints()
         xTc.HeliBoatCleanup()
