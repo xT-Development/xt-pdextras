@@ -1,3 +1,5 @@
+local Utils = require 'modules.shared'
+
 -- Helicopter / Boat Menu --
 RegisterNetEvent('xt-pdextras:client:HeliBoatMenu', function(station, label)
     local playerCerts, playerRank = lib.callback.await('xt-pdextras:server:CertsAndRank')
@@ -20,6 +22,7 @@ RegisterNetEvent('xt-pdextras:client:HeliBoatMenu', function(station, label)
             }
         end
     end
+
     lib.registerContext({
         id = 'heli_menu',
         title =  label,
@@ -30,10 +33,12 @@ end)
 
 -- Spawn Boat/Heli --
 RegisterNetEvent('xt-pdextras:client:SpawnHeliOrBoat',function(data)
+    if not Utils.CheckJob(Config.PoliceJobs) then return end
+
     QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)
         local veh = NetToVeh(netId)
         SetVehicleLivery(veh, data.livery)
-        SetVehicleNumberPlateText(veh, "SAST"..tostring(math.random(1000, 9999)))
+        SetVehicleNumberPlateText(veh, Config.VehiclePlates..tostring(math.random(1000, 9999)))
         Wait(100)
         SetVehicleFixed(veh)
         exports[Config.Fuel]:SetFuel(veh, 100)
