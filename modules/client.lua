@@ -27,9 +27,8 @@ end
 -- Create Vehicle
 function xTc.CreateVehicle(hash, coords, plate, givekeys, locked)
     local model = GetHashKey(hash)
-    RequestModel(model)
-    while not HasModelLoaded(model) do Wait(50) end
 
+    lib.requestModel(model)
     local vehicleID = CreateVehicle(model, coords.x, coords.y, coords.z, false, false)
     while not DoesEntityExist(vehicleID) do Wait(50) end
     SetModelAsNoLongerNeeded(model)
@@ -266,6 +265,39 @@ function xTc.RemoveEvidenceRoomPed()
     for x = 1, #EvidencePeds do
         if DoesEntityExist(EvidencePeds[x]) then
             DeletePed(EvidencePeds[x])
+        end
+    end
+end
+
+-- Garage Peds --
+function xTc.GaragePeds()
+    for x = 1, #Config.Garages do
+        if DoesEntityExist(GaragePeds[x]) then return end
+        local location = Config.Garages[x]
+        local label = location.label
+        local ped = Config.Garages[x].Ped
+        local pedModel = ped.model
+        GaragePeds[x] = xTc.Ped(pedModel, ped.coords, ped.scenario)
+        exports.ox_target:addLocalEntity(GaragePeds[x], {
+            {
+                type = "client",
+                icon = 'fas fa-warehouse',
+                label = 'Access ' .. label,
+                onSelect = function()
+                    TriggerEvent('xt-pdextras:client:PDGarageMenu', x, label)
+                end,
+                groups = location.job,
+                distance = 2.5
+            },
+        })
+    end
+end
+
+-- Remove Evidence Peds --
+function xTc.RemoveGaragePeds()
+    for x = 1, #GaragePeds do
+        if DoesEntityExist(GaragePeds[x]) then
+            DeletePed(GaragePeds[x])
         end
     end
 end
