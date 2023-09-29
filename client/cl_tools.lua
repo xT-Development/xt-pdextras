@@ -1,3 +1,4 @@
+local Utils = require 'modules.shared'
 local WearingNightVision = false
 local Thermal = false
 local ShowThermalUI = false
@@ -23,7 +24,7 @@ local function ToggleThermal()
 end
 
 -- Toggle Night Vision --
-local function ToggleNightVision(REMOVE)
+local function ToggleNightVision()
     WearingNightVision = not WearingNightVision
 
     if ShowThermalUI then
@@ -46,8 +47,6 @@ local function ToggleNightVision(REMOVE)
         ClearTimecycleModifier()
     end
 
-    --if REMOVE then SetPedPropIndex(cache.ped, 0, -1, 0, true) end
-
     CreateThread(function()
         while WearingNightVision do
             if not WearingNV() then
@@ -56,6 +55,7 @@ local function ToggleNightVision(REMOVE)
                     ShowThermalUI = false
                 end
                 ClearTimecycleModifier()
+                break
             end
 
             if not ShowThermalUI then
@@ -74,11 +74,7 @@ end
 -- Night Vision Item --
 exports('nightvision', function(data, slot)
     local playerPed = cache.ped
-    if not WearingNV() then
-        ToggleNightVision()
-    else
-        ToggleNightVision(true)
-    end
+    ToggleNightVision()
 end)
 
 -- Slim Jims --
