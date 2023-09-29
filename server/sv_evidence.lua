@@ -41,7 +41,7 @@ end)
 
 -- Evidence Command --
 lib.addCommand(Config.EvidenceCommand, {
-    help = 'Open an Evidence Locker',
+    help = 'Open / Create an Evidence Locker',
     params = {
         {
             name = 'locker',
