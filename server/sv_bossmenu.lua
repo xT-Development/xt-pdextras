@@ -54,7 +54,7 @@ RegisterNetEvent('xt-pdextras:server:ChangeRank', function(data)
     local gradeName = QBCore.Shared.Jobs[data.job].grades[tostring(data.grade)].name
 
     if Config.RenewedPhone then
-        exports['qb-phone']:JobsHandler(data.job, data.cid, tostring(data.grade))
+        exports['qb-phone']:JobsHandler(source, data.job, data.cid, tostring(data.grade))
     else
         local data = {
             cid = data.cid,
@@ -62,9 +62,8 @@ RegisterNetEvent('xt-pdextras:server:ChangeRank', function(data)
             gradename = gradeName
         }
         TriggerEvent('qb-bossmenu:server:GradeUpdate', data)
+        QBCore.Functions.Notify(source, data.name..' Updated: '..gradeName, 'success')
     end
-
-    QBCore.Functions.Notify(source, data.name..' Updated: '..gradeName, 'success')
 end)
 
 -- Returns Officers --

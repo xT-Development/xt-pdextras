@@ -65,6 +65,17 @@ RegisterNetEvent('xt-pdextras:client:HireOfficer', function(job)
     })
 
     if not input then return end
+    local confirmation = lib.alertDialog({
+        header = 'Confirm Hiring Citizen',
+        size = 'xs',
+        centered = true,
+        cancel = true,
+        labels = {
+            confirm = 'Hire Citizen',
+            cancel = 'Cancel'
+        }
+    })
+    if not confirmation then lib.showContext('pd_boss_menu') return end
     TriggerServerEvent('xt-pdextras:server:HireOfficer', input, job)
 end)
 
@@ -72,16 +83,19 @@ end)
 RegisterNetEvent('xt-pdextras:client:ViewOfficersMenu', function(menuID)
     local Officers = lib.callback.await('xt-pdextras:server:GetOfficers', false, menuID)
     local job = Config.BossMenus[menuID].job
+    local PlayerJob = QBCore.Functions.GetPlayerData().job
     local OfficersMenu = {}
 
     for x, t in pairs(Officers) do
-        OfficersMenu[#OfficersMenu+1] = {
-            title = t.name,
-            description = QBCore.Shared.Jobs[job].grades[tostring(t.grade)].name,
-            event = 'xt-pdextras:client:OfficerInfoMenu',
-            args = { officer = t, job = job },
-            icon = 'fas fa-user'
-        }
+        if t.grade <= tonumber(PlayerJob.grade.level) then
+            OfficersMenu[#OfficersMenu+1] = {
+                title = t.name,
+                description = QBCore.Shared.Jobs[job].grades[tostring(t.grade)].name,
+                event = 'xt-pdextras:client:OfficerInfoMenu',
+                args = { officer = t, job = job },
+                icon = 'fas fa-user'
+            }
+        end
     end
 
     lib.registerContext({
@@ -153,13 +167,8 @@ end)
 
 -- View Officer Specifically --
 RegisterNetEvent('xt-pdextras:client:OfficerInfoMenu', function(data)
+    local PlayerData = QBCore.Functions.GetPlayerData()
     local OfficerInfoMenu = {
-        {
-            title = 'Fire Officer',
-            serverEvent = 'xt-pdextras:server:FireOfficer',
-            args = { job = data.job, cid = data.officer.cid },
-            icon = 'fas fa-user-slash'
-        },
         {
             title = 'Change Rank',
             event = 'xt-pdextras:client:ChangeRank',
@@ -174,6 +183,15 @@ RegisterNetEvent('xt-pdextras:client:OfficerInfoMenu', function(data)
         },
     }
 
+    if data.officer.cid ~= PlayerData.citizenid then
+        OfficerInfoMenu[#OfficerInfoMenu+1] = {
+            title = 'Fire Officer',
+            event = 'xt-pdextras:client:FireOfficerConfirmation',
+            args = { job = data.job, cid = data.officer.cid, name = data.officer.name },
+            icon = 'fas fa-user-slash'
+        }
+    end
+
     lib.registerContext({
         id = 'officers_info_menu',
         title = data.officer.name,
@@ -181,6 +199,19 @@ RegisterNetEvent('xt-pdextras:client:OfficerInfoMenu', function(data)
         options = OfficerInfoMenu
     })
     lib.showContext('officers_info_menu')
+end)
+
+-- Confirm Firing --
+AddEventHandler('xt-pdextras:client:FireOfficerConfirmation', function(data)
+    local alert = lib.alertDialog({
+        header = 'Firing Officer',
+        content = ('Are you sure you want to fire %s?'):format(data.name),
+        size = 'xs',
+        centered = true,
+        cancel = true,
+    })
+    if not alert then lib.showContext('officers_info_menu') return end
+    TriggerServerEvent('xt-pdextras:server:FireOfficer', data)
 end)
 
 -- View Officers Certifications --
@@ -225,7 +256,7 @@ RegisterNetEvent('xt-pdextras:client:ChangeRank', function(data)
         local Grade = QBCore.Shared.Jobs[data.job].grades[tostring(ranks[x])]
         OfficerRanksMenu[#OfficerRanksMenu+1] = {
             title = ranks[x]..' | '..Grade.name,
-            serverEvent = 'xt-pdextras:server:ChangeRank',
+            event = 'xt-pdextras:client:ChangeRankConfirmation',
             args = { job = data.job, cid = data.officer.cid, grade = ranks[x], name = data.officer.name }
         }
     end
@@ -237,6 +268,22 @@ RegisterNetEvent('xt-pdextras:client:ChangeRank', function(data)
         options = OfficerRanksMenu
     })
     lib.showContext('officer_rank_menu')
+end)
+
+AddEventHandler('xt-pdextras:client:ChangeRankConfirmation', function(data)
+    local confirmation = lib.alertDialog({
+        header = 'Confirm Rank Change',
+        content = ('Are you sure you want to change %s\'s rank to %s?'):format(data.name, QBCore.Shared.Jobs[data.job].grades[tostring(data.grade)].name),
+        size = 'xs',
+        centered = true,
+        cancel = true,
+        labels = {
+            confirm = 'Confirm Change',
+            cancel = 'Cancel'
+        }
+    })
+    if not confirmation then lib.showContext('pd_boss_menu') return end
+    TriggerServerEvent('xt-pdextras:server:ChangeRank', data)
 end)
 
 -- Grant / Revoke Certs --
