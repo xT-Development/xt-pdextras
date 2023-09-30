@@ -1,7 +1,7 @@
 local Utils = require 'modules.shared'
 
 -- Open PD Garage Menu --
-RegisterNetEvent('xt-pdextras:client:PDGarageMenu', function(station, label)
+AddEventHandler('xt-pdextras:client:PDGarageMenu', function(station, label)
     local playerCerts, playerRank = lib.callback.await('xt-pdextras:server:CertsAndRank')
     local GarageMenu = {}
     for x = 1, #Config.Garages[station].Vehicles do
@@ -28,7 +28,7 @@ RegisterNetEvent('xt-pdextras:client:PDGarageMenu', function(station, label)
 end)
 
 -- Spawn PD Vehicle --
-RegisterNetEvent('xt-pdextras:client:SpawnVehicle',function(data)
+AddEventHandler('xt-pdextras:client:SpawnVehicle',function(data)
     if not Utils.CheckJob(Config.PoliceJobs) then return end
 
     local stationInfo = Config.Garages[data.station]

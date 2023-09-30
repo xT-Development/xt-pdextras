@@ -1,7 +1,7 @@
 local Utils = require 'modules.shared'
 
 -- Helicopter / Boat Menu --
-RegisterNetEvent('xt-pdextras:client:HeliBoatMenu', function(station, label)
+AddEventHandler('xt-pdextras:client:HeliBoatMenu', function(station, label)
     local playerCerts, playerRank = lib.callback.await('xt-pdextras:server:CertsAndRank')
     local stationInfo = Config.BoatsAndHelis[station]
     local HeliMenu = {}
@@ -32,7 +32,7 @@ RegisterNetEvent('xt-pdextras:client:HeliBoatMenu', function(station, label)
 end)
 
 -- Spawn Boat/Heli --
-RegisterNetEvent('xt-pdextras:client:SpawnHeliOrBoat',function(data)
+AddEventHandler('xt-pdextras:client:SpawnHeliOrBoat',function(data)
     if not Utils.CheckJob(Config.PoliceJobs) then return end
 
     QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)

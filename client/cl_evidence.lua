@@ -2,7 +2,7 @@ local xTc = require 'modules.client'
 local evidenceroom = {}
 
 -- Evidence Room Menu --
-RegisterNetEvent('xt-pdextras:client:EvidenceRoom', function(ID)
+AddEventHandler('xt-pdextras:client:EvidenceRoom', function(ID)
     local EvidenceRoomMenu = {
         {
             title = 'Personal Locker',
@@ -38,7 +38,7 @@ RegisterNetEvent('xt-pdextras:client:EvidenceRoom', function(ID)
 end)
 
 -- Open Trash Bin --
-RegisterNetEvent('xt-pdextras:client:OpenTrash',function(LOCATION)
+AddEventHandler('xt-pdextras:client:OpenTrash',function(LOCATION)
     if not exports.ox_inventory:openInventory('stash', {id = 'PD-Trash-'..LOCATION}) then
         TriggerServerEvent('xt-pdextras:server:RegisterTrash', LOCATION)
         exports.ox_inventory:openInventory('stash', {id = 'PD-Trash-'..LOCATION})
@@ -54,7 +54,7 @@ RegisterNetEvent('xt-pdextras:client:OpenEvidenceLocker',function(DRAWER, LOCATI
 end)
 
 -- Open a PD Locker --
-RegisterNetEvent('xt-pdextras:client:OpenPDLocker',function(LOCATION, CID)
+AddEventHandler('xt-pdextras:client:OpenPDLocker',function(LOCATION, CID)
     if not CID then
         CID = QBCore.Functions.GetPlayerData().citizenid
     end
@@ -66,7 +66,7 @@ RegisterNetEvent('xt-pdextras:client:OpenPDLocker',function(LOCATION, CID)
 end)
 
 -- Open a Evidence Locker --
-RegisterNetEvent('xt-pdextras:client:AccessEvidenceLockers',function(LOCATION)
+AddEventHandler('xt-pdextras:client:AccessEvidenceLockers',function(LOCATION)
     local input = lib.inputDialog('Evidence locker', {
         { type = 'number', label = 'Case / Evidence Number' },
     })

@@ -1,7 +1,7 @@
 local xTc = require 'modules.client'
 
 -- Armory Menu --
-RegisterNetEvent('xt-pdextras:client:OpenArmory', function(location)
+AddEventHandler('xt-pdextras:client:OpenArmory', function(location)
     local ArmoryMenu = {}
     for x = 1, #Config.Armory.items do
         local Armory = Config.Armory.items[x]
@@ -32,7 +32,7 @@ RegisterNetEvent('xt-pdextras:client:OpenArmory', function(location)
 end)
 
 -- Armory Category Menu --
-RegisterNetEvent('xt-pdextras:client:ArmoryCategory', function(categoryInfo)
+AddEventHandler('xt-pdextras:client:ArmoryCategory', function(categoryInfo)
     local playerCerts, playerRank = lib.callback.await('xt-pdextras:server:CertsAndRank')
     local Items = Config.Armory.items[categoryInfo.category].items
     local ArmoryCategory = {}
@@ -84,7 +84,7 @@ RegisterNetEvent('xt-pdextras:client:ArmoryCategory', function(categoryInfo)
 end)
 
 -- Input Amount of Item --
-RegisterNetEvent('xt-pdextras:client:InputItemAmount', function(info)
+AddEventHandler('xt-pdextras:client:InputItemAmount', function(info)
     if info.item.type == 'weapon' then
         TriggerServerEvent('xt-pdextras:server:GetArmoryItem', info, 1)
     else
@@ -97,7 +97,7 @@ RegisterNetEvent('xt-pdextras:client:InputItemAmount', function(info)
 end)
 
 -- Restock Inventory --
-RegisterNetEvent('xt-pdextras:client:Restock', function(location)
+AddEventHandler('xt-pdextras:client:Restock', function(location)
     local PlayerCoords = GetEntityCoords(cache.ped)
     local armoryCoords = Config.Armory.locations[location].coords
     local dist = #(PlayerCoords - vector3(armoryCoords.x, armoryCoords.y, armoryCoords.z))
