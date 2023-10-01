@@ -30,6 +30,9 @@
 - Commands
     - View your own certs
     - Send players a fine
+- Duty Blips
+    - Blip sprite changes based on vehicle
+    - Different blip colors for each LEO job
 
 ## Dependencies:
 - ox_inventory
