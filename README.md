@@ -1,5 +1,8 @@
-# xt-pdextras
-Extra PD QoL Features for QBCore
+<div align="center">
+  <h1>xt-pdextras</h1>
+  <a href="https://dsc.gg/xtdev"> <img align="center" src="https://user-images.githubusercontent.com/101474430/233859688-2b3b9ecc-41c8-41a6-b2e3-a9f1aad473ee.gif"/></a><br>
+  <a href="https://dsc.gg/xtdev"> xT Development Discord</a><br>
+</div>
 
 ## Features:
 - Police Tools
