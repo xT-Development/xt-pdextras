@@ -118,8 +118,15 @@ local function syncBlip(player, job) -- Sync blips w duty/job changes + reources
     end
 end
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function(PlayerData)
-    syncBlip(PlayerData)
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    TriggerServerEvent('xt-pdextras:server:updateBlipInfo')
+end)
+
+RegisterNetEvent('QBCore:Client:OnPlayerUnload', function(PlayerData)
+    local ID = ServerId()
+    if DoesBlipExist(officerBlips[ID]) then
+        RemoveBlip(ID)
+    end
 end)
 
 AddEventHandler('onResourceStart', function(resource) -- Send info to server on resources restart
