@@ -6,7 +6,8 @@ local GPSBlips = {}
 local function UpdateBlips()
     local officerBlips = {}
     local foundSource = nil
-    for x, t in ipairs(GPSBlips) do
+
+    for x, t in pairs(GPSBlips) do
         local ply = x
         local pPed = GetPlayerPed(ply)
         local coords, heading = GetEntityCoords(pPed), GetEntityHeading(pPed)
@@ -24,7 +25,7 @@ local function UpdateBlips()
             }
         }
     end
-    for x, t in ipairs(GPSBlips) do
+    for x, t in pairs(GPSBlips) do
         if x == t.source then
             TriggerClientEvent("xt-pdextras:client:updateDutyBlips", t.source, officerBlips)
         end
