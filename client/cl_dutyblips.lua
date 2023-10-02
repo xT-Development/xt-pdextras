@@ -105,6 +105,7 @@ end)
 -- Handlers --
 local function syncBlip(player, job) -- Sync blips w duty/job changes + reources start/player load
     local job = player.job or job
+
     if job.type == "leo" then
         local callSign = player.metadata['callsign']
         if not job.onduty then
@@ -119,12 +120,13 @@ local function syncBlip(player, job) -- Sync blips w duty/job changes + reources
     end
 end
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function(PlayerData)
-    syncBlip(PlayerData)
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    local Player = QBCore.Functions.GetPlayerData()
+    syncBlip(Player)
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
-    local ID = ServerId()
+    local ID = PlayerId()
     if DoesBlipExist(officerBlips[ID]) then
         RemoveBlip(ID)
     end
