@@ -28,8 +28,8 @@ local function getBlipInfo(vehClass)
     for x, t in pairs(Config.DutyBlips) do
         if t.classes then
             for _, k in ipairs(t.classes) do
-                if vehClass == x then
-                    callback = Config.DutyBlips[k]
+                if vehClass == k then
+                    callback = Config.DutyBlips[x]
                     break
                 end
             end
@@ -60,6 +60,7 @@ local function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation,
 
     local blipInfo
     local blipColor = getBlipColor(playerJob)
+
     if not vehClass then
         blipInfo = Config.DutyBlips['none']
     else
@@ -122,7 +123,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function(PlayerData)
     syncBlip(PlayerData)
 end)
 
-RegisterNetEvent('QBCore:Client:OnPlayerUnload', function(PlayerData)
+RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     local ID = ServerId()
     if DoesBlipExist(officerBlips[ID]) then
         RemoveBlip(ID)
