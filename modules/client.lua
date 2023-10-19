@@ -302,4 +302,37 @@ function xTc.RemoveGaragePeds()
     end
 end
 
+function xTc.syncBlip(player, job) -- Sync blips w duty/job changes + reources start/player load
+    local job = player.job or job
+
+    if job.type == "leo" or job.type == "medical" then
+        local callSign = player.metadata['callsign']
+        if not job.onduty then
+            TriggerServerEvent('xt-pdextras:server:updateBlipInfo') -- Remove blip if it exist
+        else
+            TriggerServerEvent('xt-pdextras:server:updateBlipInfo', job.name, callSign) -- Set blip info
+            if cache.vehicle then
+                local class = GetVehicleClass(cache.vehicle)
+                TriggerServerEvent('xt-pdextras:server:updateVehClass', class)
+            end
+        end
+    end
+end
+
+function xTc.removeOfficerBlip(ID)
+    if DoesBlipExist(officerBlips[ID]) then
+        RemoveBlip(ID)
+    end
+end
+
+function xTc.removeAllDutyBlips()
+    if not officerBlips then return end
+
+    for x = 0, #officerBlips do
+        if DoesBlipExist(officerBlips[x]) then
+            RemoveBlip(x)
+        end
+    end
+end
+
 return xTc

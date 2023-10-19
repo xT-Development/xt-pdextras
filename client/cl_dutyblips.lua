@@ -1,26 +1,15 @@
 -- Some code is reused from qb-policejob, but im not a braindead dummy and made it better
+local xTc = require 'modules.client'
 
-local officerBlips = {}
+officerBlips = {}
 
 -- Cache Vehilce Class --
 lib.onCache('vehicle', function(value)
+    if not PlayerJob.type == "leo" and not PlayerJob.type == "medical" then return end
     local newClass = nil
-    if value then
-        newClass = GetVehicleClass(value)
-    end
+    if value then newClass = GetVehicleClass(value) end
     TriggerServerEvent('xt-pdextras:server:updateVehClass', newClass)
 end)
-
--- Cleanup --
-local function removeAllDutyBlips()
-    if not officerBlips then return end
-
-    for x = 0, #officerBlips do
-        if DoesBlipExist(officerBlips[x]) then
-            RemoveBlip(x)
-        end
-    end
-end
 
 -- Get Info From Config --
 local function getBlipInfo(vehClass)
@@ -102,58 +91,14 @@ RegisterNetEvent('xt-pdextras:client:updateDutyBlips', function(blipsData)
     end
 end)
 
--- Handlers --
-local function syncBlip(player, job) -- Sync blips w duty/job changes + reources start/player load
-    local job = player.job or job
 
-    if job.type == "leo" then
-        local callSign = player.metadata['callsign']
-        if not job.onduty then
-            TriggerServerEvent('xt-pdextras:server:updateBlipInfo') -- Remove blip if it exist
-        else
-            TriggerServerEvent('xt-pdextras:server:updateBlipInfo', job.name, callSign) -- Set blip info
-            if cache.vehicle then
-                local class = GetVehicleClass(cache.vehicle)
-                TriggerServerEvent('xt-pdextras:server:updateVehClass', class)
-            end
-        end
-    end
-end
-
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    local Player = QBCore.Functions.GetPlayerData()
-    syncBlip(Player)
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
-    local ID = PlayerId()
-    if DoesBlipExist(officerBlips[ID]) then
-        RemoveBlip(ID)
-    end
-end)
-
-AddEventHandler('onResourceStart', function(resource) -- Send info to server on resources restart
-    if resource ~= GetCurrentResourceName() then return end
-    local Player = QBCore.Functions.GetPlayerData()
-    if not Player then return end
-    syncBlip(Player)
-end)
-
-AddEventHandler('onResourceStop', function(resource) -- Remove Blips
-    if resource ~= GetCurrentResourceName() then return end
-    for x = 0, #officerBlips do
-        if DoesBlipExist(officerBlips[x]) then
-            RemoveBlip(x)
-        end
-    end
-end)
 
 RegisterNetEvent('QBCore:Client:SetDuty', function(duty) -- Send info to server based on duty status
     local Player = QBCore.Functions.GetPlayerData()
     if not Player then return end
-    syncBlip(Player)
+    xTc.syncBlip(Player)
 end)
 
 RegisterNetEvent('QRCore:Client:OnJobUpdate', function(job)
-    syncBlip(nil, job)
+    xTc.syncBlip(nil, job)
 end)

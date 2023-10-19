@@ -1,10 +1,10 @@
 local xTc = require 'modules.client'
 local Utils = require 'modules.shared'
 
-local Player = QBCore.Functions.GetPlayerData()
-local PlayerJob = QBCore.Functions.GetPlayerData().job
-local onDuty = false
-local CurrentCops = 0
+Player = QBCore.Functions.GetPlayerData()
+PlayerJob = QBCore.Functions.GetPlayerData().job
+onDuty = false
+CurrentCops = 0
 
 ReturnPoints = {}
 HeliAndBoatPeds = {}
@@ -35,6 +35,9 @@ end)
 local function playerLoaded()
     Player = QBCore.Functions.GetPlayerData()
     PlayerJob = QBCore.Functions.GetPlayerData().job
+    if not PlayerJob.type == "leo" and not PlayerJob.type == "medical" then return end
+
+    xTc.syncBlip(Player)
     if Config.UseArmory then xTc.CreatePDArmory() end
     if Config.UseBossMenus then xTc.CreatePDBossMenus() end
     if Config.UseEvidence then xTc.EvidenceRoomPed() end
@@ -47,8 +50,12 @@ end
 
 -- Player Unload --
 local function playerUnload()
+    if not PlayerJob.type == "leo" and not PlayerJob.type == "medical" then return end
+
+    local ID = PlayerId()
     Player = {}
     PlayerJob = {}
+    xTc.removeOfficerBlip(ID)
     if Config.UseArmory then xTc.CleanupPDArmory() end
     if Config.UseBossMenus then xTc.CleanupPDBossMenus() end
     if Config.UseEvidence then xTc.RemoveEvidenceRoomPed() end
