@@ -4,6 +4,15 @@ local xTs = require 'modules.server'
 -- Get All Officers --
 lib.callback.register('xt-pdextras:server:CertsAndRank', function(source, target) return xTs.CertsAndRank(source, target) end)
 
+-- Get Player Vehicles in Specific Garage --
+lib.callback.register('xt-pdextras:server:getPlayerVehiclesAtGarage', function(source, data)
+    local vehicles = MySQL.query.await('SELECT * FROM `player_vehicles` WHERE `citizenid` = ? AND `garage` = ?', { data[1], data[2] })
+    if vehicles and vehicles[1] then
+        return vehicles
+    end
+    return nil
+end)
+
 -- Fine Player --
 if Config.FineCommand.enable then
     RegisterNetEvent('xt-pdextras:server:FinePlayer', function(fine)
