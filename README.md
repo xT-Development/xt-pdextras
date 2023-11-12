@@ -5,34 +5,78 @@
 </div>
 
 ## Features:
-- Police Tools
-    - Night vision goggles w/ thermal vision toggle
-    - Slimjims - Easier "lockpick" for Police to open vehicles
-- Police Certifications
-    - Granted / Revoked by Officers w/ access to the bossmenus
-    - View your own certs w/ a command
-- Boss Menus
-    - View officers info (rank, certifications)
-    - Change officers ranks
-    - Grant Revoke certifications
-    - View officers by specific rank
-- Evidence Lockers
-    - Create / Open evidence lockers at specific locations, or use a command nearby to open evidence lockers
-    - PD "trash can" that will regularly wipe (set in config)
-- Armory
-    - Restock option. Set certain items and max amounts for a "quick refill"
-    - Rank / Cert checks for each item
-    - Categorized items. Weapons, ammo, medical items, & tools
-- Police Garages
-    - Rank & Cert checks for each vehicle
-- Police Boat & Helis
-    - Rank & Cert checks for each vehicle
-- Commands
-    - View your own certs
-    - Send players a fine
-- Duty Blips
-    - Blip sprite changes based on vehicle
-    - Different blip colors for each LEO job
+<details>
+    <summary>Police Tools</summary>
+    <ul>
+        <li>Night vision goggles w/ thermal vision toggle</li>
+        <li>Slimjims - Easier "lockpick" for Police to open vehicles</li>
+    </ul>
+</details>
+
+<details>
+    <summary>Police Certifications</summary>
+    <ul>
+        <li>Granted / Revoked by Officers w/ access to the bossmenus</li>
+        <li>View your own certs w/ a command</li>
+    </ul>
+</details>
+
+<details>
+    <summary>Boss Menus</summary>
+    <ul>
+        <li>View officers info (rank, certifications)</li>
+        <li>Change officers ranks</li>
+        <li>Grant Revoke certifications</li>
+        <li>View officers by specific rank</li>
+    </ul>
+</details>
+
+<details>
+    <summary>Evidence Lockers</summary>
+    <ul>
+        <li>Create / Open evidence lockers at specific locations, or use a command nearby to open evidence lockers</li>
+        <li>PD "trash can" that will regularly wipe (set in config)</li>
+    </ul>
+</details>
+
+<details>
+    <summary>Armory</summary>
+    <ul>
+        <li>Restock option. Set certain items and max amounts for a "quick refill"</li>
+        <li>Rank / Cert checks for each item</li>
+        <li>Categorized items. Weapons, ammo, medical items, & tools</li>
+    </ul>
+</details>
+
+<details>
+    <summary>Police Garages</summary>
+    <ul>
+        <li>Rank & Cert checks for each vehicle</li>
+    </ul>
+</details>
+
+<details>
+    <summary>Police Garages / Boats / Helis</summary>
+    <ul>
+        <li>Rank & Cert checks for each vehicle</li>
+    </ul>
+</details>
+
+<details>
+    <summary>Commands</summary>
+    <ul>
+        <li>View your own certs</li>
+        <li>Send players a fine</li>
+    </ul>
+</details>
+
+<details>
+    <summary>Duty Blips</summary>
+    <ul>
+         <li>Blip sprite changes based on vehicle</li>
+          <li>Different blip colors for each LEO job</li>
+    </ul>
+</details>
 
 ## Dependencies:
 - ox_inventory
@@ -41,7 +85,7 @@
 - oxmysql
 
 ## Setup:
-- Add the following function to qb-phone > server > employment.lua
+- Boss Menu Usage: Add the following function to qb-phone > server > employment.lua
 ```lua
 local function JobsHandler(source, Job, CID, grade)
     local src = source
@@ -72,5 +116,61 @@ local function JobsHandler(source, Job, CID, grade)
     end
 end
 exports('JobsHandler', JobsHandler)
+```
+
+- Raid Garages Usage: Find the `PublicGarage` function in qb-garages and replace it with the following:
+```lua
+local function PublicGarage(garageName, type)
+    local garage = Config.Garages[garageName]
+    local categories = garage.vehicleCategories
+    local superCategory = GetSuperCategoryFromCategories(categories)
+    local isHidden = true
+    if PlayerJob.name == 'police' and type ~= 'depot' then isHidden = false end
+
+    exports['qb-menu']:openMenu({
+        {
+            header = garage.label,
+            isMenuHeader = true,
+        },
+        {
+            header = 'Raid Garage',
+            txt = 'Search for a citizen\'s vehicles',
+            icon = 'fas fa-magnifying-glass',
+            hidden = isHidden,
+            params = {
+                event = 'xt-pdextras:client:raidGarage',
+                args = {
+                    garage = garage,
+                    garageId = garageName,
+                    categories = categories,
+                    superCategory = superCategory,
+                    type = type,
+                }
+            }
+        },
+        {
+            header = Lang:t("menu.text.vehicles"),
+            txt = Lang:t("menu.text.vehicles"),
+            params = {
+                event = "qb-garages:client:GarageMenu",
+                args = {
+                    garageId = garageName,
+                    garage = garage,
+                    categories = categories,
+                    header =  Lang:t("menu.header."..garage.type.."_"..superCategory, {value = garage.label}),
+                    superCategory = superCategory,
+                    type = type
+                }
+            }
+        },
+        {
+            header = Lang:t("menu.leave.car"),
+            txt = "",
+            params = {
+                event = 'qb-menu:closeMenu'
+            }
+        },
+    })
+end
 ```
 
