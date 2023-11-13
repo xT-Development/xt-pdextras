@@ -28,7 +28,7 @@ local function ToggleNightVision()
     WearingNightVision = not WearingNightVision
 
     if ShowThermalUI then
-        exports['qb-core']:HideText()
+          lib.hideTextUI()
         ShowThermalUI = false
     end
 
@@ -51,7 +51,7 @@ local function ToggleNightVision()
         while WearingNightVision do
             if not WearingNV() then
                 if ShowThermalUI then
-                    exports['qb-core']:HideText()
+                      lib.hideTextUI()
                     ShowThermalUI = false
                 end
                 ClearTimecycleModifier()
@@ -59,7 +59,7 @@ local function ToggleNightVision()
             end
 
             if not ShowThermalUI then
-                exports['qb-core']:DrawText('UP - Toggle Thermal')
+                lib.showTextUI('UP - Toggle Thermal', {position = 'left-center'})
                 ShowThermalUI = true
             end
 
