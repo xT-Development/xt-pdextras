@@ -85,7 +85,21 @@
 - oxmysql
 
 ## Setup:
-- Boss Menu Usage: Add the following function to qb-phone > server > employment.lua
+- PD Certifications Usage: Add the following to `qb-core > server > player.lua` inside your existing playerdata
+```lua
+    PlayerData.metadata['pdcerts'] = PlayerData.metadata['pdcerts'] or {
+        ['airone'] = false,             -- Air-1
+        ['mbu'] = false,                -- Motorbike Unit
+        ['fto'] = false,                -- Field Training Officer
+        ['hsu'] = false,                -- High Speed Unit
+        ['classthree'] = false,         -- Class 3
+        ['classtwo'] = false,           -- Class 2
+        ['alr'] = false,                -- Armalite Rifle
+        ['canine'] = false,             -- Canine
+        ['swat'] = false                -- SWAT
+    }
+```
+- Boss Menu Usage: Add the following function to `qb-phone > server > employment.lua`
 ```lua
 local function JobsHandler(source, Job, CID, grade)
     local src = source
