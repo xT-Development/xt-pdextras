@@ -114,7 +114,7 @@ function xTc.HeliBoatPeds()
                 onSelect = function()
                     TriggerEvent('xt-pdextras:client:HeliBoatMenu', x, label)
                 end,
-                job = location.job,
+                groups = location.job,
                 distance = 2.0
             },
         })
@@ -147,7 +147,7 @@ function xTc.EnterReturnPoint(class)
     local vehClass = GetVehicleClass(vehicle)
     if vehClass ~= class then return end
     if not shown then
-        exports['qb-core']:DrawText('[E] - Store Vehicle')
+            lib.showTextUI('[E] - Store Vehicle', {position = 'left-center'})
         shown = true
     end
 end
@@ -155,7 +155,7 @@ end
 -- Exit Return Vehicle Point --
 function xTc.ExitReturnPoint()
     if shown then
-        exports['qb-core']:HideText()
+        lib.hideTextUI()
         shown = false
     end
 end
@@ -167,20 +167,20 @@ function xTc.InsideReturnPoint()
 
     if veh == 0 then
         if shown then
-            exports['qb-core']:HideText()
+            lib.hideTextUI()
             shown = false
         end
         return
     end
 
     if not shown then
-        exports['qb-core']:DrawText('[E] - Store Vehicle')
+        lib.showTextUI('[E] - Store Vehicle', {position = 'left-center'})
         shown = true
     end
 
     if IsControlJustPressed(0, 38) then
         QBCore.Functions.DeleteVehicle(veh)
-        exports['qb-core']:HideText()
+        lib.hideTextUI()
         shown = false
     end
 end
@@ -225,7 +225,7 @@ function xTc.CreatePDArmory()
                     onSelect = function()
                         TriggerEvent('xt-pdextras:client:OpenArmory', x)
                     end,
-                    job = Armory.job,
+                    groups = Armory.job,
                     distance = 2.0
                 }
             }
@@ -253,7 +253,7 @@ function xTc.EvidenceRoomPed()
                 onSelect = function()
                     TriggerEvent('xt-pdextras:client:EvidenceRoom', x)
                 end,
-                job = 'police',
+                groups = 'police',
                 distance = 2.5
             },
         })
