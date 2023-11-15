@@ -61,10 +61,10 @@ end)
 -- Empty Trash Cans --
 lib.cron.new(('*/%s * * * *'):format(Config.WipeTrashInterval), function()
     for x = 1, #Config.EvidenceRooms do
-        local Trash = MySQL.query.await("SELECT * FROM `ox_inventory` WHERE name = ?", { 'PD-Trash-'..x })
-        if not Trash and not Trash[1] then return end
-
-        exports.ox_inventory:ClearInventory(Trash[1].name)
-        Utils.Debug(Trash[1].name..' Emptied')
+        local PDTrash = MySQL.scalar.await('SELECT `name` FROM `ox_inventory` WHERE `name` = ? LIMIT 1', { ('PD-Trash-%s'):format(x) })
+        if PDTrash then
+            exports.ox_inventory:ClearInventory(PDTrash)
+            Utils.Debug(('%s Emptied'):format(PDTrash))
+        end
     end
 end)

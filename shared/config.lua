@@ -5,16 +5,16 @@ Config.Debug = true
 Config.DebugPoly = false
 
 -- General Configs --
-Config.RenewedPhone = true -- Enable if using Renewed-Phone / Uses qb-management if false
-Config.PoliceJobs = { 'police' } -- Set to the name of your police job(s)
-Config.Fuel = 'cdn-fuel' -- Set to the name of your fuel script
+Config.RenewedPhone = true              -- Enable if using Renewed-Phone / Uses qb-management if false
+Config.PoliceJobs = { 'police' }        -- Set to the name of your police job(s)
+Config.Fuel = 'cdn-fuel'                -- Set to the name of your fuel script
 
 -- Enable / Disable Features --
-Config.UseArmory = true
-Config.UseBoatHeliLocations = true
-Config.UseBossMenus = true
-Config.UseEvidence = true
-Config.UseGarages = true
+Config.UseArmory = true                 -- Toggle armory usage
+Config.UseBoatHeliLocations = true      -- Toggle helis/boats usage
+Config.UseBossMenus = true              -- Toggle bossmenu usage
+Config.UseEvidence = true               -- Toggle evidence/trash usage
+Config.UseGarages = true                -- Toggle garage usage
 
 -- Fines Config --
 Config.FineCommand = {
